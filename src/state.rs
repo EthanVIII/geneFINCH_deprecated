@@ -44,7 +44,7 @@ impl SelectBuffer {
     }
     pub(crate) fn render_buffer(&self) -> String {
         let mut buffer: String = String::new();
-        buffer.push_str("\n\n\n");
+        buffer.push_str("\n");
         buffer.push_str(&*self.header);
         buffer.push_str("\n\n");
 
