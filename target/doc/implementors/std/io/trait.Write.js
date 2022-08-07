@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["tui"] = [{"text":"impl&lt;W&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/1.58.1/std/io/trait.Write.html\" title=\"trait std::io::Write\">Write</a> for <a class=\"struct\" href=\"tui/backend/struct.CrosstermBackend.html\" title=\"struct tui::backend::CrosstermBackend\">CrosstermBackend</a>&lt;W&gt; <span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;W: <a class=\"trait\" href=\"https://doc.rust-lang.org/1.58.1/std/io/trait.Write.html\" title=\"trait std::io::Write\">Write</a>,&nbsp;</span>","synthetic":false,"types":["tui::backend::crossterm::CrosstermBackend"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

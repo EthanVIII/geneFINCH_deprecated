@@ -1,5 +1,6 @@
-mod state;
 mod render;
+mod finch;
+mod sim;
 
 //Uses
 use std::{
@@ -15,14 +16,7 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 
-use tui::{
-    backend::CrosstermBackend,
-    layout::Rect,
-    Terminal,
-    widgets::{Block, Borders},
-    style::{Color, Modifier, Style},
-    widgets::{List, ListItem, ListState, Paragraph}
-};
+use tui;
 
 // Tick Input
 enum Event<I> {
@@ -31,24 +25,31 @@ enum Event<I> {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Setup
+    // Setup Term for input.
     enable_raw_mode()?;
     let mut stdout: io::Stdout = io::stdout();
     crossterm::execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;
-    let backend :CrosstermBackend<io::Stdout>= CrosstermBackend::new(stdout);
-    let mut terminal:Terminal<CrosstermBackend<io::Stdout>>  = Terminal::new(backend)?;
+    let backend : tui::backend::CrosstermBackend<io::Stdout> =
+        tui::backend::CrosstermBackend::new(stdout);
+    let terminal: tui::Terminal<tui::backend::CrosstermBackend<io::Stdout>>  =
+        tui::Terminal::new(backend)?;
 
 
-    let mut win_state: state::State = state::State{
-        win_mode: state::WinMode::Selection,
+    let mut win_state: render::State = render::State{
+        win_mode: render::WinMode::Selecting,
         terminal,
-        select_buffer: state
+        select_buffer: render
             ::SelectBuffer
             ::default_buffer("geneFINCH: Select an Option".to_string()),
         stats_buffer: "".to_string(),
         output_buffer: "".to_string(),
         vis_buffer: "".to_string(),
         current_key: KeyCode::Null
+    };
+    let mut sim_state: sim::Sim = sim::Sim{
+        cycle: 0,
+        space: Vec::new(),
+        new_finches: Vec::new(),
     };
 
     // Setup event polling thread.
@@ -75,8 +76,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     });
 
     loop {
-        render::render_frame(&mut win_state);
+        // Display
+        match render::render_frame(&mut win_state, &mut sim_state) {
+            Ok(_) => (),
+            Err(_) => {
+                disable_raw_mode()?;
+                execute!(
+                    win_state.terminal.backend_mut(),
+                    LeaveAlternateScreen,
+                    DisableMouseCapture
+                )?;
+                win_state.terminal.show_cursor()?;
+                println!("Error: Could not render Frame");
+                return Ok(())
+            },
+        }
         match rx.recv()? {
+            // Global Exit
             Event::Input(event) => {
                         win_state.current_key = event.code;
                         if event.code == KeyCode::Char('q') {
