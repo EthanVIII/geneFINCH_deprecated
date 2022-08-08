@@ -1,6 +1,7 @@
 mod render;
 mod finch;
 mod sim;
+mod test;
 
 //Uses
 use std::{
