@@ -128,8 +128,11 @@ pub fn render_frame(win_state: &mut State, sim_state: &mut sim::Sim) -> Result<(
         },
         WinMode::RunBasicSim => {
             // Simulation
-            sim::run_sim(5,sim_state);
-            win_state.output_buffer = "Currently Run Basic Sim".parse().unwrap();
+            sim::run_sim(50,sim_state);
+            win_state.output_buffer = format!(
+                "Sim Age: {} \nSim Pop: {}",
+                sim_state.cycle,
+                sim_state.count_pop());
         },
         WinMode::RunCustomSim => {
             win_state.output_buffer = "Currently Run Custom Sim".parse().unwrap();
@@ -196,7 +199,7 @@ pub fn render_frame(win_state: &mut State, sim_state: &mut sim::Sim) -> Result<(
         f.render_widget(select,chunks[3]);
 
     })?;
-    win_state.terminal.set_cursor(1,1);
+    win_state.terminal.set_cursor(1, 1)?;
     Ok(())
 }
 

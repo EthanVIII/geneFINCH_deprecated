@@ -16,6 +16,7 @@ use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event as CEvent, KeyCode},
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
+use rand::rngs::ThreadRng;
 
 use tui;
 
@@ -49,8 +50,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     let mut sim_state: sim::Sim = sim::Sim{
         cycle: 0,
-        space: Vec::new(),
+        space: vec![None;30*30],
         new_finches: Vec::new(),
+        rng: rand::thread_rng()
     };
 
     // Setup event polling thread.
