@@ -45,7 +45,7 @@ impl Lexome {
 #[derive(Clone)]
 pub struct Finch {
     // CPU
-    pub lexome: Vec<Lexome>,
+    pub lexome: Vec<Lexome>, 
     pub inst_h: usize,
     pub read_h: usize,
     pub writ_h: usize,

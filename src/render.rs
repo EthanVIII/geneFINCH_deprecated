@@ -12,6 +12,16 @@ use tui::{
 };
 use crate::sim;
 
+pub struct State {
+    pub terminal: Terminal<CrosstermBackend<io::Stdout>>,
+    pub win_mode: WinMode,
+    pub select_buffer: SelectBuffer,
+    pub stats_buffer: String,
+    pub output_buffer: String,
+    pub vis_buffer: String,
+    pub current_key: KeyCode
+}
+
 // STATE
 #[derive(PartialEq)]
 #[derive(Copy, Clone)]
@@ -81,16 +91,6 @@ impl SelectBuffer {
             selection: 0
         }
     }
-}
-
-pub struct State {
-    pub terminal: Terminal<CrosstermBackend<io::Stdout>>,
-    pub win_mode: WinMode,
-    pub select_buffer: SelectBuffer,
-    pub stats_buffer: String,
-    pub output_buffer: String,
-    pub vis_buffer: String,
-    pub current_key: KeyCode
 }
 
 // RENDERING
